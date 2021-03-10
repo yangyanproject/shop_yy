@@ -93,13 +93,13 @@
                     <p>京ICP备19006430号</p>
                 </div>
             </div>
-        </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Footer',
-}
+  name: 'Footer'
+};
 </script>
 
 <style lang="less" scoped>
