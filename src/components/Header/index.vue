@@ -48,9 +48,18 @@
 <script>
   export default {
     name:'Header',
+    data(){
+        return{
+            keyword:''
+        }
+    },
     methods:{
         toSearch(){
-            this.$router.push('/search')
+            this.$router.push({
+                name:"search",
+                params:{keyword:this.keyword||undefined},
+                query:{keyword1:this.keyword.toUpperCase()}
+                })
         }
     }
 };
