@@ -31,13 +31,13 @@
                     <!-- <a class="logo" title="尚品汇" href="###" target="_blank">
                         <img src="./images/logo.png" alt="">
                     </a> -->
-                    <router-link class="logo" title="尚品汇" to="/home" target="_blank" >
+                    <router-link class="logo"  to="/home"  >
                         <img src="./images/logo.png" alt="">
                     </router-link>
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" />
+                        <input type="text" id="autocomplete" class="input-error input-xxlarge"   v-model="keyword" />
                         <button class="sui-btn btn-xlarge btn-danger" type="button" @click="toSearch">搜索</button>
                     </form>
                 </div>
@@ -50,16 +50,17 @@
     name:'Header',
     data(){
         return{
-            keyword:''
+            keyword:"",
         }
     },
     methods:{
         toSearch(){
-            this.$router.push({
-                name:"search",
-                params:{keyword:this.keyword||undefined},
-                query:{keyword1:this.keyword.toUpperCase()}
-                })
+              this.$router.push({
+            name: "search",
+        params: { keyword: this.keyword || undefined},//如果传递的是空串，就换成undefined
+        query: { keyword1: this.keyword.toUpperCase() },
+      });
+
         }
     }
 };
