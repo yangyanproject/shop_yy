@@ -57,8 +57,8 @@
         toSearch(){
               this.$router.push({
             name: "search",
-        params: { keyword: this.keyword || undefined},//如果传递的是空串，就换成undefined
-        query: { keyword1: this.keyword.toUpperCase() },
+             params: { keyword: this.keyword || undefined},//如果传递的是空串，就换成undefined
+             query: { keyword1: this.keyword.toUpperCase() },
       });
 
         }
