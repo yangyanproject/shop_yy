@@ -1,7 +1,45 @@
 <template>
   <div class="type-nav">
             <div class="container">
-                <h2 class="all">全部商品分类</h2>
+             <div @mouseleave="moveOutDiv" @mouseenter="isShow=true">
+                    <h2 class="all">全部商品分类</h2>
+                   <transition name="sort">
+                     
+                      <div class="sort" v-show="isShow" >
+                      <div class="all-sort-list2" @click="toSearch" >
+                         <div class="item" 
+                         :class="{item_on:index===currentIndex}"
+                         v-for="(c1,index) in categoryList" 
+                         :key="c1.categoryId"
+                          @mouseenter="moveInDiv(index)">
+                            <h3>
+                            <a href="javascript:;" :data-categoryName="c1.categoryName"
+                            :data-category1Id="c1.categoryId"
+                            >{{c1.categoryName}}</a>
+                            </h3>
+                            <div class="item-list clearfix">
+                            <div class="subitem">
+                                <dl class="fore" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
+                                <dt>
+                                    <a href="javascript:;" :data-categoryName="c2.categoryName"
+                                    :data-category1Id="c2.categoryId"
+                                    >{{c2.categoryName}}</a>
+                                </dt>
+                                <dd>
+                                    <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
+                                     <a href="javascript:;" :data-categoryName="c3.categoryName"
+                                        :data-category1Id="c3.categoryId"
+                                        >{{c3.categoryName}}</a>
+                                    </em>
+                                </dd>
+                                </dl>
+                             </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                   </transition>
+             </div>
                 <nav class="nav">
                     <a href="###">服装城</a>
                     <a href="###">美妆馆</a>
@@ -12,45 +50,78 @@
                     <a href="###">有趣</a>
                     <a href="###">秒杀</a>
                 </nav>
-                <div class="sort">
-                    <div class="all-sort-list2">
-                         <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId">
-                            <h3>
-                            <a href="">{{c1.categoryName}}</a>
-                            </h3>
-                            <div class="item-list clearfix">
-                            <div class="subitem">
-                                <dl class="fore" v-for="(c2,index) in c1.categoryChild" :key="c2.categoryId">
-                                <dt>
-                                    <a href="">{{c2.categoryName}}</a>
-                                </dt>
-                                <dd>
-                                    <em v-for="(c3,index) in c2.categoryChild" :key="c3.categoryId">
-                                    <a href="">{{c3.categoryName}}</a>
-                                    </em>
-                                </dd>
-                                </dl>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
         </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import throttle  from 'lodash/throttle'
 export default {
   name: 'TypeNav',
+  data(){
+     return{
+         currentIndex:-1,
+         isShow:true
+     }
+  },
   mounted(){
-      this.$store.dispatch('getCategroyList')
+     
+      if(this.$route.path !=="/home"){
+          this.isShow=false
+      }
   },
 //   从vuex中吧数据映射到vue数组中
   computed:{
       ...mapState({
           categoryList:state=>state.home.categoryList
       })
+  },
+  methods:{
+    //   moveInDiv(index){
+    //      this.currentIndex=index
+    //   }
+       moveInDiv:throttle(
+           function (index) {
+                this.currentIndex=index
+           },20,{trailing:false}),
+
+    toSearch(event){
+         let target=event.target;
+         let dataset=target.dataset;
+
+         let{categoryname,category1id,category2id,category3id}=dataset
+         if(categoryname){
+             let location={
+                 name:"search",
+            }
+            let query={
+                categoryName:categoryname
+            }
+            if(category1id){
+                query.category1Id=category1id
+            }else if(category2id){
+                query.category2Id=category2id
+            }else if(category3id){
+                query.category3Id=category3id
+            }
+            location.query=query
+            console.log(query)
+            if(this.$route.params){
+              location.params=this.$route.params
+            }
+              this.$router.push(location)
+         }
+       
+    },
+    moveOutDiv(){
+        this.currentIndex=-1
+        if(this.$route.path !== '/home'){
+            this.isShow=false
+        }
+    }
+    
   }
 }
 </script>
@@ -95,6 +166,18 @@ export default {
                 position: absolute;
                 background: #fafafa;
                 z-index: 999;
+
+                &.sort-enter{
+                    opacity: 0;
+                    height: 0;
+                }
+                &.sort-enter-to{
+                    opacity: 1;
+                    height: 461px;
+                }
+                &.sort-enter-active{
+                    transition: all .5s;
+                }
 
                 .all-sort-list2 {
                     .item {
@@ -165,7 +248,7 @@ export default {
                             }
                         }
 
-                        &:hover {
+                        &.item_on {
                             background-color:bisque;
                             .item-list {
                                 display: block;
