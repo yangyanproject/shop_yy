@@ -17,7 +17,7 @@ import Rank from '@/pages/Home/Rank'
 import Like from '@/pages/Home/Like'
 import Floor from '@/pages/Home/Floor'
 import Brand from '@/pages/Home/Brand'
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'Home',
   components:{
@@ -32,10 +32,10 @@ export default {
     this.getFloorList()
   },
   methods:{
-    // getFloorList(){
-    //   this.$store.dispatch('getFloorList')
-    // }
-    ...mapActions(['getFloorList'])
+    getFloorList(){
+      this.$store.dispatch('getFloorList')
+    }
+   
   },
   computed:{
     ...mapState({

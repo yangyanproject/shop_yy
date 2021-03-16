@@ -4,9 +4,9 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" ref="bannerContainer">
           <div class="swiper-wrapper" >
-            <div class="swiper-slide" v-for="(banner,index) in bannerList" :key="banner.id">
+            <div class="swiper-slide" v-for="(banner,index) in bannerList" :key="banner.id" >
               <img :src="banner.imgUrl" />
             </div>
             <!-- <div class="swiper-slide">
@@ -102,6 +102,8 @@
 
 <script>
 import {mapState} from 'vuex'
+import Swiper from 'swiper/js/swiper'
+import 'swiper/css/swiper.css'
 export default {
   name: "ListContainer",
   mounted(){
@@ -116,8 +118,36 @@ export default {
     ...mapState({
       bannerList:state=>state.home.bannerList
     })
+  },
+  watch:{
+    bannerList:{
+      handler(newval,oldval){
+             this.$nextTick(() => {
+          //等待页面最近的一次更新完成之后自动调用
+          //通常用在当数据更新后需要做一些操作，而这些操作又需要等待页面更新完成才有效，此时就要用nextTick
+          new Swiper(this.$refs.bannerContainer, {
+            // direction: "vertical", // 垂直切换选项
+            loop: true, // 循环模式选项
+            // 如果需要分页器
+            pagination: {
+              el: ".swiper-pagination",
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            // // 如果需要滚动条
+            // scrollbar: {
+            //   el: ".swiper-scrollbar",
+            // },
+          });
+        })
+      }
+    }
   }
-};
+}
+
 </script>
 
 <style lang="less" scoped>
