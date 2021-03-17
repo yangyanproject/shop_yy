@@ -6,8 +6,6 @@ import store from '@/store'
 import '@/mock/mockServe'
 import SlideLoop from '@/components/SlideLoop'
 import 'swiper/css/swiper.css'
-// import   '@/api'
-
 Vue.config.productionTip = false
 Vue.component(TypeNav.name,TypeNav)
 Vue.component('SlideLoop',SlideLoop)

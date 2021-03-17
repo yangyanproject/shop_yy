@@ -20,11 +20,3 @@ export const reqFloorList=()=>{
      method:'get'
   })
 }
-
-export const reqSearchInfo=(searchParams)=>{
-  return Ajax({
-    url:'/list',
-    method:'post',
-    data:searchParams
-  })
-}
