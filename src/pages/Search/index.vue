@@ -11,16 +11,20 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-      
-            <li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}<i @click="removeCategoryName">×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}<i @click="removeName">×</i></li>
             <li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="removeKeyword">×</i></li>
-             <li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(':')[1]}}<i @click="removeTrademark">×</i></li>
-               <li class="with-x" v-for="(prop,index) in searchParams.props" :key="index">{{prop.split(':')[1]}}<i @click="removeProps">×</i></li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1] }}<i @click="removeTrademark">×</i>
+            </li>
+               <li class="with-x" v-for="(prop,index) in searchParams.props" :key="index">
+              {{prop.split(":")[1] }}<i @click="removeProp">×</i>
+            </li>
+          
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @searchTrademark="searchTrademark"  @searchProps="searchProps"/>
+        <SearchSelector @searchTrademark="searchTrademark" @searchProps="searchProps"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -50,19 +54,19 @@
           </div>
           <div class="goods-list">
             <ul class="yui3-g">
-              <li class="yui3-u-1-5" v-for="(good,index) in goodsList" :key="good.id">
+              <li class="yui3-u-1-5" v-for="(goods,index) in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="good.defaultImg" /></a>
+                    <a href="item.html" target="_blank"><img :src="goods.defaultImg" /></a>
                   </div>
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i>{{good.price}}</i>
+                      <i>{{goods.price}}</i>
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" >{{good.title}}} </a>
+                    <a target="_blank" href="item.html" >{{goods.title}}</a>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -73,7 +77,7 @@
                   </div>
                 </div>
               </li>
-               
+      
             </ul>
           </div>
           <div class="fr page">
@@ -119,105 +123,82 @@
     data(){
       return{
         searchParams:{
-            "category1Id":"",
-            "category2Id":"",
-            "category3Id": "",
-            "categoryName": "",
-            "keyword": "",
-            "order": "1:desc",
-            "pageNo": 1,
-            "pageSize": 10,
-            "props": [],
-            "trademark": ""
+            category1Id: "",
+            category2Id: "",
+            category3Id: "",
+            categoryName: "",
+            keyword: "",
+            props: [],
+            trademark: "",
+
+            order: "1:desc",
+            pageNo: 1,
+            pageSize: 10,
         }
       }
     },
     beforeMount(){
-    //    let{category1Id,category2Id,category3Id,categoryName}=this.$route.query
-    //    let{keyword}=this.$route.params
-    //    let obj={
-    //      ...this.searchParams,
-    //      category1Id,
-    //      category2Id,
-    //      category3Id,
-    //      categoryName,
-    //      keyword
-    //    }
-    //    this.searchParams=obj
-    this.handleSearchParams()
+        this.handlerSearch()
     },
-    mounted(){
-        this.getGoodsListInfo()
-    },
-    methods:{
-      getGoodsListInfo(){
-          this.$store.dispatch('getGoodsListInfo',this.searchParams)
-      },
-      handleSearchParams(){
-         let{category1Id,category2Id,category3Id,categoryName}=this.$route.query
-          let{keyword}=this.$route.params
-          let obj={
-            ...this.searchParams,
-            category1Id,
-            category2Id,
-            category3Id,
-            categoryName,
-            keyword
-          }
-          this.searchParams=obj
-      },
-      removeCategoryName(){
-        this.searchParams.categoryName=undefined
+     mounted(){
+          this.getGoodsInfo()
+     },
+     methods:{
+       getGoodsInfo(){
+         this.$store.dispatch('getGoodsInfo',this.searchParams)
+       },
+       handlerSearch(){
+         let {category1Id,category2Id,category3Id,categoryName} =this.$route.query
+         let {keyword}=this.$route.params
+         let obj={
+           ...this.searchParams,
+           category1Id,category2Id,category3Id,
+           categoryName,
+           keyword
+         }
+         this.searchParams=obj
+       },
+       removeName(){
+         this.searchParams.categoryName=undefined
         this.$router.push({name:'search',params:this.$route.params})
-      },
-      removeKeyword(){
-        this.searchParams.keyword=undefined
-        this.$bus.$emit('clearKeyword')
-        this.$router.push({name:'search',query:this.$route.query})
-      },
-      searchTrademark(tm){
-            this.searchParams.trademark=`${tm.tmId}:${tm.tmName}`
-            this.getGoodsListInfo()
-      },
-      removeTrademark(){
-        this.searchParams.trademark=undefined
-        this.getGoodsListInfo()
-      },
-      searchProps(attrValue,attr){
+       },
+       removeKeyword(){
+         this.searchParams.keyword=undefinedS
+         this.$bus.$emit('clearKeyword')
+         this.$router.push({name:'search',query:this.$route.query})
+       },
+       searchTrademark(tm){
+        //  console.log(111)
+          this.searchParams.trademark=`${tm.tmId}:${tm.tmName}`
+          this.getGoodsInfo()
+       },
+       removeTrademark(){
+         this.searchParams.trademark=undefined
+         this.getGoodsInfo()
+       },
+       searchProps(attrValue,attr){
          let prop=`${attr.attrId}:${attrValue}:${attr.attrName}`
-         let isReqdat=this.searchParams.props.some(item =>item===prop)
-         if(isReqdat) return
+         let isReq=this.searchParams.props.some(item=>item===prop)
+         if(isReq) return
          this.searchParams.props.push(prop)
-         this.getGoodsListInfo()
-      },
-      removeProps(){
-            this.searchParams.props=undefined
-            this.getGoodsListInfo()
-      }
-    },
-    computed:{
-      ...mapGetters(['goodsList'])
-    },
-    watch:{
-      $route:{
-        handler(newVal,oldVal){
-             let{category1Id,category2Id,category3Id,categoryName}=this.$route.query
-              let{keyword}=this.$route.params
-              let obj={
-                ...this.searchParams,
-                category1Id,
-                category2Id,
-                category3Id,
-                categoryName,
-                keyword
-              }
-              this.searchParams=obj
-              this.getGoodsListInfo()
+         this.getGoodsInfo()
+       },
+       removeProp(index){
+          this.searchParams.props.splice(index,1)
+          this.getGoodsInfo()
+       }
+     },
+     computed:{
+       ...mapGetters(['goodsList'])
+     },
+     watch:{
+        $route:{
+          handler(newVal,oldVal){
+            this.handlerSearch()
+            this.getGoodsInfo()
+          }
         }
-      }
-    },
-
-
+     },
     components: {
       SearchSelector
     }

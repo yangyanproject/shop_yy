@@ -191,7 +191,7 @@
          this.getGoodsListInfo()
       },
       removeProps(){
-            this.searchParams.props=undefined
+            this.searchParams.props.splice(index,1)
             this.getGoodsListInfo()
       }
     },

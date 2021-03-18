@@ -1,16 +1,15 @@
-//search模块的小store
 import {reqSearchInfo} from '@/api'
 const state = {
-    goodsListInfo:{}
+    goodsListInfo:[]
 }
 const mutations = {
     RECEIVE_GOODSLISTINFO(state,goodsListInfo){
-         state.goodsListInfo=goodsListInfo
+        state.goodsListInfo=goodsListInfo
     }
 }
 const actions = {
-    async  getGoodsListInfo({commit},searchParams){
-        const result=await reqSearchInfo(searchParams)
+   async getGoodsInfo({commit},searchParams){
+        const result =await reqSearchInfo(searchParams)
         if(result.code===200){
             commit('RECEIVE_GOODSLISTINFO',result.data)
         }
@@ -18,7 +17,7 @@ const actions = {
 }
 const getters = {
     attrsList(state){
-      return state.goodsListInfo.attrsList
+        return state.goodsListInfo.attrsList
     },
     goodsList(state){
         return state.goodsListInfo.goodsList
@@ -26,7 +25,6 @@ const getters = {
     trademarkList(state){
         return state.goodsListInfo.trademarkList
     }
- 
 }
 export default {
   state,

@@ -50,6 +50,9 @@ export default {
             keyword:''
         }
     },
+  mounted(){
+       this.$bus.$on('clearKeyword',()=>{this.keyword=''})
+    },
      methods:{
         toSearch(){
             let location ={
@@ -60,14 +63,8 @@ export default {
                 location.query = this.$route.query
             }
             this.$router.push(location)
-        },
-        clearKeyword(){
-            this.keyword=''
         }
     },
-    mounted(){
-        this.$bus.$on('clearKeyword',this.clearKeyword)
-    }
 }
 </script>
 
