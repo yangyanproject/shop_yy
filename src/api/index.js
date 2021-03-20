@@ -28,3 +28,11 @@ export const reqSearchInfo=(searchParams)=>{
     data:searchParams
   })
 }
+
+export const reqDetailInfo=(skuId)=>{
+  return Ajax({
+    url:`/item/${skuId}`,
+    method:'get'
+    
+  })
+}

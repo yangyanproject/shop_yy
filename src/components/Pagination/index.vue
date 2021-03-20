@@ -1,24 +1,40 @@
 <template>
   <div class="pagination">
-   
-    <button :disabled="currentPageNo!==1" @click="$emit('changePageNo',1)">上一页</button>
-     <button v-if="startEnd.start!==1"  @click="$emit('changePageNo',1)">1</button>
-     <button v-if="startEnd.start>2"  @click="$emit('changePageNo',page)">···</button>
+    <button :disabled="currentPageNo > 1" @click="$emit('changePageNo', 1)">
+      上一页
+    </button>
+    <button v-if="startEnd.start !== 1" @click="$emit('changePageNo', 1)">
+      1
+    </button>
+    <button v-if="startEnd.start > 2" @click="$emit('changePageNo', page)">
+      ···
+    </button>
 
-    <button v-for="page in startEnd.end"
-     v-if="page>=startEnd.start"
+    <button
+      v-for="page in startEnd.end"
+      v-if="page >= startEnd.start"
       :key="page"
-       :class="{active:currentPageNo===page}"
-        @click="$emit('changePageNo',page)"
-      >{{page}}
-      </button>
-    
+      :class="{ active: currentPageNo === page }"
+      @click="$emit('changePageNo', page)"
+    >
+      {{ page }}
+    </button>
 
-    <button v-if="currentPageNo<=totalPage-1">···</button>
-    <button v-if="startEnd.end!==totalPage"  @click="$emit('changePageNo',totalPage)">{{totalPage}}</button>
-    <button :disabled="currentPageNo===totalPage" @click="$emit('changePageNo',currentPageNo+1)">下一页</button>
+    <button v-if="startEnd.end <totalPage - 1">···</button>
+    <button
+      v-if="startEnd.end !== totalPage"
+      @click="$emit('changePageNo', totalPage)"
+    >
+      {{ totalPage }}
+    </button>
+    <button
+      :disabled="currentPageNo === totalPage"
+      @click="$emit('changePageNo', currentPageNo + 1)"
+    >
+      下一页
+    </button>
 
-    <button style="margin-left: 30px">共 {{total}} 条</button>
+    <button style="margin-left: 30px">共 {{ total }} 条</button>
   </div>
 </template>
 
@@ -57,16 +73,16 @@ export default {
       } else {
         start = currentPageNo - Math.floor(contiueNo / 2);
         end = currentPageNo + Math.floor(contiueNo / 2);
-        if(start<=1){
-          start=1
-          end=contiueNo
+        if (start <= 1) {
+          start = 1;
+          end = contiueNo;
         }
-        if(end>=totalPage){
-               end=totalPage
-               start=end-contiueNo+1
+        if (end >= totalPage) {
+          end = totalPage;
+          start = end - contiueNo + 1;
         }
       }
-      return {start,end}
+      return { start, end };
     },
   },
 };

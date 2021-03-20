@@ -82,9 +82,10 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="goods.defaultImg"
-                    /></a>
+                  <router-link :to="'/detail/'+goods.id" >
+                     <img :src="goods.defaultImg">
+                  </router-link>
+                
                   </div>
                   <div class="price">
                     <strong>
@@ -93,7 +94,9 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html">{{ goods.title }}</a>
+                    <!-- <a target="_blank" href="item.html">{{ goods.title }}</a>
+                     -->
+                     <router-link :to="'/detail/'+goods.id" >{{ goods.title }}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -184,24 +187,24 @@ export default {
     },
     removeName() {
       this.searchParams.categoryName = undefined;
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.$router.replace({ name: "search", params: this.$route.params });
     },
     removeKeyword() {
       this.searchParams.keyword = undefinedS;
       this.$bus.$emit("clearKeyword");
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.$router.replace({ name: "search", query: this.$route.query });
     },
     searchTrademark(tm) {
       //  console.log(111)
       this.searchParams.trademark = `${tm.tmId}:${tm.tmName}`;
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     removeTrademark() {
       this.searchParams.trademark = undefined;
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     searchProps(attrValue, attr) {
@@ -209,12 +212,12 @@ export default {
       let isReq = this.searchParams.props.some((item) => item === prop);
       if (isReq) return;
       this.searchParams.props.push(prop);
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     removeProp(index) {
       this.searchParams.props.splice(index, 1);
-      // this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     changeOrder(orderFalg){
