@@ -29,10 +29,16 @@ export const reqSearchInfo=(searchParams)=>{
   })
 }
 
-export const reqDetailInfo=(skuId)=>{
+export const reqGoodsDetailInfo = (skuId) => {
   return Ajax({
     url:`/item/${skuId}`,
     method:'get'
-    
+  })
+}
+
+export const reqAddOrUpdateShopCart=(skuId,skuNum)=>{
+  return Ajax({
+    url:`/cart/addToCart/${ skuId }/${ skuNum }`,
+    method:'post'
   })
 }

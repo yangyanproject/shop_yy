@@ -1,8 +1,11 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="imageSwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="../images/s1.png">
+      <div class="swiper-slide" v-for="(image,index) in imageList" :key="image.id">
+        <img :src="image.imgUrl" 
+         :class="{active:defaultIndex===index}"
+         @click="changeIndex(index)"
+        >
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -15,6 +18,49 @@
   import Swiper from 'swiper'
   export default {
     name: "ImageList",
+    props:["imageList"],
+    data(){
+      return{
+        defaultIndex:0
+      }
+    },
+    methods:{
+      changeIndex(index){
+        this.defaultIndex=index
+        this.$bus.$emit('changeIndex',index)
+      }
+    },
+    watch:{
+      imageList:{
+          immediate:true,
+          handler(newval,oldval){
+              
+              this.$nextTick(()=>{
+                 new Swiper (this.$refs.imageSwiper, {
+                        // direction: 'vertical', // 垂直切换选项
+                        // loop: true, // 循环模式选项
+                        
+                        // 如果需要分页器
+                        // pagination: {
+                        // el: '.swiper-pagination',
+                        // },
+                        
+                        // 如果需要前进后退按钮
+                        navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                        },
+                        slidesPerView:3,  //每屏三个
+                        slidesPerGroup:3 //每组三个
+                        // 如果需要滚动条
+                        // scrollbar: {
+                        // el: '.swiper-scrollbar',
+                        // },
+                    })        
+              })
+          }
+      } 
+  }
   }
 </script>
 
@@ -43,10 +89,10 @@
           padding: 1px;
         }
 
-        &:hover {
-          border: 2px solid #f60;
-          padding: 1px;
-        }
+        // &:hover {
+        //   border: 2px solid #f60;
+        //   padding: 1px;
+        // }
       }
     }
 
