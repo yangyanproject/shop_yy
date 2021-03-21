@@ -42,30 +42,31 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li :class="{ active: orderFlag === '1' }">
+                <li 
+                :class="{active:orderFlag==='1'}" >
                   <a href="javascript:;" @click="changeOrder('1')"
                     >综合
                     <i
-                      v-if="orderFlag === '1'"
-                      class="iconfont"
-                      :class="{
-                        iconup: orderType === 'asc',
-                        icondown: orderType === 'desc',
-                      }"
+                    v-if="orderFlag==='1'"
+                       class="iconfont" 
+                       :class="{
+                         iconup:orderType==='asc',
+                         icondown:orderType==='desc'
+                         }"
                     ></i>
                   </a>
                 </li>
 
-                <li :class="{ active: orderFlag === '2' }">
+                <li :class="{active:orderFlag==='2'}" >
                   <a href="javascript:;" @click="changeOrder('2')"
                     >价格
                     <i
-                      v-if="orderFlag === '2'"
-                      class="iconfont"
+                      v-if="orderFlag==='2'" 
+                     class="iconfont" 
                       :class="{
-                        iconup: orderType === 'asc',
-                        icondown: orderType === 'desc',
-                      }"
+                         iconup:orderType==='asc',
+                         icondown:orderType==='desc'
+                         }"
                     ></i>
                   </a>
                 </li>
@@ -81,9 +82,10 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="goods.defaultImg"
-                    /></a>
+                  <router-link :to="'/detail/'+goods.id" >
+                     <img :src="goods.defaultImg">
+                  </router-link>
+                
                   </div>
                   <div class="price">
                     <strong>
@@ -92,7 +94,9 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html">{{ goods.title }}</a>
+                    <!-- <a target="_blank" href="item.html">{{ goods.title }}</a>
+                     -->
+                     <router-link :to="'/detail/'+goods.id" >{{ goods.title }}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -112,14 +116,13 @@
               </li>
             </ul>
           </div>
-
-          <Pagination
-            :currentPageNo="searchParams.pageNo"
-            :total="goodsListInfo.total"
-            :pageSize="searchParams.pageSize"
-            :continueNo="5"
-            @changePageNo="changePageNo"
-          ></Pagination>
+         <Pagination
+          :currentPageNo="searchParams.pageNo"
+          :total="goodsListInfo.total"
+          :pageSize="searchParams.pageSize"
+          :contiueNo='5'
+          @changePageNo="changePageNo"
+         ></Pagination>
         </div>
       </div>
     </div>
@@ -129,7 +132,7 @@
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
 import { mapGetters, mapState } from "vuex";
-// import { delete } from "node_modules/vue/types/umd";
+
 export default {
   name: "Search",
   data() {
@@ -184,24 +187,24 @@ export default {
     },
     removeName() {
       this.searchParams.categoryName = undefined;
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.$router.replace({ name: "search", params: this.$route.params });
     },
     removeKeyword() {
       this.searchParams.keyword = undefinedS;
       this.$bus.$emit("clearKeyword");
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.$router.replace({ name: "search", query: this.$route.query });
     },
     searchTrademark(tm) {
       //  console.log(111)
       this.searchParams.trademark = `${tm.tmId}:${tm.tmName}`;
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     removeTrademark() {
       this.searchParams.trademark = undefined;
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     searchProps(attrValue, attr) {
@@ -209,42 +212,42 @@ export default {
       let isReq = this.searchParams.props.some((item) => item === prop);
       if (isReq) return;
       this.searchParams.props.push(prop);
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
     removeProp(index) {
       this.searchParams.props.splice(index, 1);
-      this.searchParams.page = 1;
+      this.searchParams.pageNo = 1;
       this.getGoodsInfo();
     },
-    changeOrder(orderFlag) {
-      let originFlag = this.searchParams.order.split(":")[0];
-      let originType = this.searchParams.order.split(":")[1];
-      let newOrder = "";
-      //orderFlag=1
-      if (orderFlag === originFlag) {
-        newOrder = `${orderFlag}:${originType === "asc" ? "desc" : "asc"}`;
-      } else {
-        newOrder = `${orderFlag}:desc`;
-      }
-      this.searchParams.order = newOrder;
-      this.searchParams.page = 1;
-      this.getGoodsInfo();
+    changeOrder(orderFalg){
+        let originFlag=this.searchParams.order.split(':')[0]
+        let originType=this.searchParams.order.split(':')[1]
+        let newOrder=''
+        if(orderFalg===originFlag){
+         newOrder= `${orderFalg}:${originType==='asc'?'desc':'asc'}`
+        }else{
+          newOrder=`${orderFalg}:desc`
+        }
+        this.searchParams.order=newOrder
+
+        this.getGoodsInfo()
     },
-    changePageNo(page) {
-      this.searchParams.pageNo = page;
-      this.getGoodsInfo();
-    },
+    changePageNo(page){
+        this.searchParams.pageNo=page
+        this.getGoodsInfo()
+    }
+  
   },
   computed: {
     ...mapGetters(["goodsList"]),
     ...mapState({
       goodsListInfo: (state) => state.search.goodsListInfo,
       orderFlag() {
-        return searchParams.order.split(":")[0];
+        return this.searchParams.order.split(":")[0];
       },
       orderType() {
-        return searchParams.order.split(":")[1];
+        return this.searchParams.order.split(":")[1];
       },
     }),
   },
