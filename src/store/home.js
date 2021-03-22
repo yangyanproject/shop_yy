@@ -20,7 +20,7 @@ const mutations = {
 const actions = {
     async getCategroyList({commit}){
         const result = await CategoryList()
-        console.log(result)
+    
         if (result.code === 200) {
             commit('RESOVE_CATEGROY',result.data)
         }

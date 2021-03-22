@@ -1,6 +1,7 @@
 import axios from 'axios'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
+import store from '@/store'
 const Ajax =new axios.create({
     baseURL:'/api',
     timeout:5000
@@ -8,6 +9,10 @@ const Ajax =new axios.create({
 //请求拦截器
 Ajax.interceptors.request.use((config)=>{
      nprogress.start()
+    let userTempId=store.state.user.userTempId
+    if(userTempId){
+        config.headers.userTempId=userTempId 
+    }
      return config
 })
 //响应拦截器
