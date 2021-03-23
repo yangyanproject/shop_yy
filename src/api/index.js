@@ -51,7 +51,7 @@ export const reqShopCartList=()=>{
  })
 }
 
-//修改单间商品状态
+//修改单件商品状态
 // /api/cart/checkCart/{skuID}/{isChecked}
 export const reqChangeShopOne=(skuId,isChecked)=>{
   return Ajax({
@@ -93,5 +93,50 @@ export const reqDeleteAll=(skuIds)=>{
     url:'/cart/batchDeleteCart',
     method:'delete',
     data:skuIds
+  })
+}
+
+
+
+// /api/user/passport/sendCode/{phone}
+
+// 获取验证码
+// get
+
+export const reqPhoneCode=(phone)=>{
+  return Ajax({
+    url:`/user/passport/sendCode/${phone}`,
+    method:'get'
+  })
+}
+//注册用户
+// /api/user/passport/register
+export const reqUserRegister=(userInfo)=>{
+  //函数体
+  return Ajax({
+    url:`/user/passport/register`,
+    method:'post',
+    data:userInfo
+  })
+}
+
+//登录
+// /api/user/passport/login
+// post
+export const reqUserLogin=(userInfo)=>{
+  return Ajax({
+    url:'/user/passport/login',
+    method:'post',
+    data:userInfo
+  })
+}
+
+// 添加了token校验获取用户登录信息，用户登录只保存用户的token
+// token校验
+// http://182.92.128.115/api/user/passport/auth/getUserInfo
+export const reqGetUserInfo=()=>{
+  return Ajax({
+    url:'/user/passport/auth/getUserInfo',
+    method:'get'
   })
 }
