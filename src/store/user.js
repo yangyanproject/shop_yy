@@ -1,34 +1,32 @@
-
-import {getUsertempId} from '@/utils/userabout'
-import {reqPhoneCode,reqUserRegister,reqUserLogin,reqGetUserInfo} from '@/api'
 //user模块的小store
+import {getUsertempId} from '@/utils/userabout'
+import {reqGetCode,reqRegister,reqUserLogin,reqUserInfo} from '@/api'
+
+
 const state = {
-  userTempId:getUsertempId(),
-  code:'',
-  userInfo:{},
-  token:''
-  // localStorage.getItem('TOKEN_KEY')
+   userTempId:getUsertempId(),
+   code:'',
+   userInfo:{},
+   token:''
 }
 const mutations = {
   RECEIVE_CODE(state,code){
     state.code=code
   },
-  //获取登录信息
   RECEIVE_TOKEN(state,token){
     state.token=token
   },
-  // 获取用户信息
   RECEIVE_USERINFO(state,userInfo){
-       state.userInfo=userInfo
+    state.userInfo=userInfo
   },
-  // 清空token
   RESET_TOKEN(state){
     state.token=''
   }
 }
 const actions = {
-  async getPhondeCode({commit},phone){
-    const result=await reqPhoneCode(phone)
+  // 获取验证码
+  async getCode({commit},phone){
+    const result=await reqGetCode(phone)
     if(result.code===200){
       commit('RECEIVE_CODE',result.data)
       return result.data
@@ -36,40 +34,40 @@ const actions = {
       return Promise.reject(new Error('failed'))
     }
   },
-  // 注册
+  //注册
   async userRegister({commit},userInfo){
-    const result=await reqUserRegister(userInfo)
-    if(result.code===200){
-        return 'ok'
-    }else{
-      return Promise.reject(new Error('注册失败'))
-    }
+     const result=await reqRegister(userInfo)
+     if(result.code===200){
+       return 'ok'
+     }else{
+      return Promise.reject(new Error('failed'))
+     }
   },
-
   //登录
   async userLogin({commit},userInfo){
      const result=await reqUserLogin(userInfo)
      if(result.code===200){
-       commit('RECEIVE_TOKEN',result.data.token)
-       return 'ok'
+        commit('RECEIVE_TOKEN',result.data.token)
+        return 'ok'
      }else{
-       return Promise.reject(new Error('failed'))
+      return Promise.reject(new Error('failed'))
      }
   },
-  //根据token获取用户信息
+  // 获取用户登录数据
   async getUserInfo({commit}){
-    const result=await reqGetUserInfo()
+    const result=await reqUserInfo()
     if(result.code===200){
       commit('RECEIVE_USERINFO',result.data)
-      return result.data.name
+       return result.data.name
     }else{
-      return Promise.reject(new Error('获取用户信息失败'))
+      return Promise.reject(new Error('failed'))
     }
   },
-
+  // token过期，删除token
   async resetToken({commit}){
-    commit('RESET_TOKEN')
+     commit('RESET_TOKEN')
   }
+
 }
 const getters = {}
 export default {

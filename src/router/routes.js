@@ -7,8 +7,8 @@ import AddCartSuccess from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
 
 
-
 export default [
+  
   {
     path:'/shopcart',
     component:ShopCart //本质就是在注册路由组件

@@ -2,7 +2,6 @@
 // 插件是可以为vue提供很多的资源的（指令  组件 等等）
 
 // 第二步：引入并声明使用vue-router
-import { reqGetUserInfo } from '@/api'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
@@ -57,9 +56,10 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   }
 })
-let token = store.state.user.token
-let userInfo = store.state.user.userInfo
-router.beforeEach(async (to, from, next) => {
+
+router.beforeEach(async(to, from, next) => {
+  let token = store.state.user.token
+  let userInfo = store.state.user.userInfo
   if (token) {
     if (to.path === '/login') {
       next('/')
@@ -67,18 +67,17 @@ router.beforeEach(async (to, from, next) => {
       if (userInfo.name) {
         next()
       } else {
-        try {
-          // 获取用户信息成功
-          await store.dispatch('getUserInfo')
-          next()
-        } catch (error) {
-          // 获取用户信息失败
-          store.dispatch('resetToken')
-          next('/login')
-        }
+         try {
+           await store.dispatch('getUserInfo')
+           alert('获取数据成功')
+           next()
+         } catch (error) {
+           store.dispatch('resetToken')
+           this.$router.push('/login')
+         }
       }
     }
-  } else {
+  }else{
     next()
   }
 
