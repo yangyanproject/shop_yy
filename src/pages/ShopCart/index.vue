@@ -17,7 +17,7 @@
       >
         <ul
           class="cart-list"
-          v-for="cart in shopCart.cartInfoList"
+          v-for="(cart) in shopCart.cartInfoList"
           :key="cart.id"
         >
           <li class="cart-list-con1">
@@ -25,14 +25,13 @@
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked"
-              @click="changeShop(cart)"
+              @click="changeShopOne(cart)"
             />
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl" />
             <div class="item-msg">{{ cart.skuName }}</div>
           </li>
-
           <li class="cart-list-con4">
             <span class="price">{{ cart.skuPrice }}</span>
           </li>
@@ -59,12 +58,10 @@
             >
           </li>
           <li class="cart-list-con6">
-            <span class="sum">{{ cart.skuPrice * cart.skuNum }}</span>
+            <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="javascript:;" class="sindelet" @click="deleteShop(cart)"
-              >删除</a
-            >
+            <a href="javascript:;" class="sindelet" @click="deleteOne(cart)">删除</a>
             <br />
             <a href="javascript:;">移到收藏</a>
           </li>
@@ -73,11 +70,11 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" v-model="changeAll" />
+        <input class="chooseAll" type="checkbox" v-model="isCheckAll" />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="javascript:;" @click="deleteAll">删除选中的商品</a>
+        <a href="javascript:;" @click="deleteAll()">删除选中的商品</a>
         <a href="javascript:;">移到我的关注</a>
         <a href="javascript:;">清除下柜商品</a>
       </div>
@@ -88,10 +85,11 @@
         </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
-          <i class="summoney">{{ allMoney }}</i>
+          <i class="summoney">{{ allPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <!-- <a class="sum-btn" href="###" target="_blank">结算</a> -->
+          <router-link class="sum-btn" to='/trade'>结算</router-link>
         </div>
       </div>
     </div>
@@ -99,7 +97,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "ShopCart",
   mounted() {
@@ -113,7 +111,6 @@ export default {
       if (disnum + cart.skuNum < 1) {
         disnum = 1 - cart.skuNum;
       }
-
       try {
         await this.$store.dispatch("addOrUpdateShopCart", {
           skuId: cart.skuId,
@@ -124,28 +121,26 @@ export default {
         alert("修改失败");
       }
     },
-    async changeShop(cart) {
+    async changeShopOne(cart) {
       try {
-        await this.$store.dispatch("ChangeChecked", {
+        await this.$store.dispatch("changeShopOne", {
           skuId: cart.skuId,
           isChecked: cart.isChecked ? 0 : 1,
         });
         this.getShopCartList();
       } catch (error) {
-        alert(error.message);
+        alert("单件商品改变失败");
       }
     },
-    // 删除单个商品
-    async deleteShop(cart) {
+    async deleteOne(cart) {
       try {
-        await this.$store.dispatch("DeleteOne", cart.skuId);
+        await this.$store.dispatch("deleteShopOne", cart.skuId);
         alert("删除成功");
         this.getShopCartList();
       } catch (error) {
-        alert(error.message);
+        alert("删除失败");
       }
     },
-    //删除所有选择的商品
     async deleteAll() {
       let skuIds = [];
       this.shopCartList.forEach((item) => {
@@ -156,11 +151,11 @@ export default {
         });
       });
       try {
-        await this.$store.dispatch("deleteAll", skuIds);
-        alert("删除成功");
+        await this.$store.dispatch("deleteCheckedAll", skuIds);
+        alert("删除所有选中成功");
         this.getShopCartList();
       } catch (error) {
-        alert("删除失败");
+        alert("删除所有选中失败");
       }
     },
   },
@@ -168,18 +163,19 @@ export default {
     ...mapState({
       shopCartList: (state) => state.shopcart.shopCartList,
     }),
-    ...mapGetters(["checkedShop", "allMoney"]),
-    changeAll: {
+    ...mapGetters(["checkedShop", "allPrice"]),
+    isCheckAll: {
       get() {
-        return (
-          this.shopCartList.every((item) =>
-            item.cartInfoList.every((item1) => item1.isChecked === 1)
-          ) && this.shopCartList.length > 0
-        );
+        return this.shopCartList.every(
+          (item) =>
+            item.cartInfoList.every((item1) => item1.isChecked === 1)) &&
+            this.shopCartList.length > 0
+        
       },
       async set(val) {
         let isChecked = val ? 1 : 0;
         let skuIds = [];
+
         this.shopCartList.forEach((item) => {
           item.cartInfoList.forEach((item1) => {
             if (item1.isChecked !== isChecked) {
@@ -187,12 +183,15 @@ export default {
             }
           });
         });
-        try {
-          await this.$store.dispatch("ChangeCheckedAll", { isChecked, skuIds });
 
+        try {
+          await this.$store.dispatch("checkedAll", {
+            isChecked,
+            skuIds,
+          });
           this.getShopCartList();
         } catch (error) {
-          alert(error.message);
+          alert("全选失败");
         }
       },
     },

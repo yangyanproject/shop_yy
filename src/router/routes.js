@@ -5,10 +5,30 @@ import Register from '@/pages/Register'
 import Detail from '@/pages/Detail'
 import AddCartSuccess from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
+import Trade from '@/pages/Trade'
+import Pay from '@/pages/Pay'
+import PaySuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+
 
 
 export default [
-  
+  {
+    path:'/center',
+    component:Center //本质就是在注册路由组件
+  },
+  {
+    path:'/paysuccess',
+    component:PaySuccess //本质就是在注册路由组件
+  },
+  {
+    path:'/pay',
+    component:Pay //本质就是在注册路由组件
+  },
+  {
+    path:'/trade',
+    component:Trade //本质就是在注册路由组件
+  },
   {
     path:'/shopcart',
     component:ShopCart //本质就是在注册路由组件

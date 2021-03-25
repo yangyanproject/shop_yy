@@ -10,8 +10,13 @@ const Ajax =new axios.create({
 Ajax.interceptors.request.use((config)=>{
      nprogress.start()
     let userTempId=store.state.user.userTempId
+
     if(userTempId){
-        config.headers.userTempId=userTempId
+        config.headers.userTempId=userTempId 
+    }
+    let token = store.state.user.token
+    if(token){
+      config.headers.token = token
     }
      return config
 })

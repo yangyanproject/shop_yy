@@ -369,7 +369,7 @@
              sessionStorage.setItem('SEIVE_KEY',JSON.stringify(this.skuInfo))
              this.$router.push('/addcartsuccess?skuNum='+this.skuNum)
           } catch (error) {
-            alert(error.message+'请求添加购物车失败')
+            
           }
         }
     },
